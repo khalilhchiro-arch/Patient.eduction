@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tendinopathy — The 3-Stage Continuum</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --white: #ffffff;
+      --ink: #1a1a1a;
+      --ink-light: #5a5a5a;
+      --rule: #e0e0e0;
+      --bg-subtle: #f8f8f8;
+      --s1-hue: #E07B39;
+      --s1-bg: #FDF3EC;
+      --s1-border: #E07B39;
+      --s2-hue: #C0482A;
+      --s2-bg: #FAF0EE;
+      --s2-border: #C0482A;
+      --s3-hue: #6B3A3A;
+      --s3-bg: #F5EDED;
+      --s3-border: #6B3A3A;
+    }
+
+    body {
+      background: var(--white);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      min-height: 100vh;
+      padding: 48px 24px 80px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    header { margin-bottom: 52px; animation: fadeUp 0.5s ease both; }
+
+    .label {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-family: 'Fraunces', serif;
+      font-weight: 600;
+      font-size: clamp(28px, 5vw, 42px);
+      line-height: 1.1;
+      color: var(--ink);
+      margin-bottom: 16px;
+    }
+
+    h1 em { font-style: italic; font-weight: 300; }
+
+    .subtitle {
+      font-size: 15px;
+      color: var(--ink-light);
+      line-height: 1.6;
+      max-width: 580px;
+    }
+
+    .section-header {
+      margin: 48px 0 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .section-label {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+
+    .section-title {
+      font-family: 'Fraunces', serif;
+      font-weight: 600;
+      font-size: clamp(18px, 3vw, 24px);
+      line-height: 1.2;
+    }
+
+    /* Rail */
+    .rail-container { margin-bottom: 12px; }
+    .rail { display: flex; height: 8px; border-radius: 4px; overflow: hidden; }
+    .rail-seg { flex: 1; }
+    .rail-seg.s1 { background: var(--s1-hue); }
+    .rail-seg.s2 { background: var(--s2-hue); }
+    .rail-seg.s3 { background: var(--s3-hue); }
+    .rail-labels { display: flex; margin-top: 8px; }
+    .rail-labels span {
+      flex: 1;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 500;
+      text-align: center;
+      color: var(--ink-light);
+    }
+
+    /* Reversibility */
+    .reversibility-row { display: flex; gap: 16px; margin-bottom: 28px; }
+    .rev-pill {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 8px;
+      border-radius: 6px;
+      background: #f9f9f9;
+      border: 1px solid var(--rule);
+    }
+    .rev-pill .rev-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-light); margin-bottom: 4px; font-weight: 500; }
+    .rev-pill .rev-arrow { font-size: 18px; line-height: 1; margin-bottom: 4px; }
+    .rev-pill .rev-text { font-size: 11px; font-weight: 500; text-align: center; }
+    .rev-pill.high .rev-arrow, .rev-pill.high .rev-text { color: var(--s1-hue); }
+    .rev-pill.partial .rev-arrow, .rev-pill.partial .rev-text { color: var(--s2-hue); }
+    .rev-pill.low .rev-arrow, .rev-pill.low .rev-text { color: var(--s3-hue); }
+
+    /* Cards */
+    .card {
+      border: 1.5px solid var(--rule);
+      border-radius: 10px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: box-shadow 0.2s ease, transform 0.2s ease;
+      margin-bottom: 16px;
+      animation: fadeUp 0.5s ease both;
+    }
+    .card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.08); transform: translateY(-1px); }
+    .card.s1 { border-left: 4px solid var(--s1-border); }
+    .card.s2 { border-left: 4px solid var(--s2-border); }
+    .card.s3 { border-left: 4px solid var(--s3-border); }
+    .card.neutral { border-left: 4px solid #cccccc; }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px;
+      gap: 16px;
+    }
+    .card-header-left { display: flex; align-items: center; gap: 16px; }
+
+    .stage-badge {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Fraunces', serif; font-weight: 600; font-size: 16px;
+      color: white; flex-shrink: 0;
+    }
+    .s1 .stage-badge { background: var(--s1-hue); }
+    .s2 .stage-badge { background: var(--s2-hue); }
+    .s3 .stage-badge { background: var(--s3-hue); }
+
+    .card-icon {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: var(--bg-subtle);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; flex-shrink: 0;
+    }
+
+    .stage-number { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-light); font-weight: 500; margin-bottom: 2px; }
+    .stage-name { font-family: 'Fraunces', serif; font-weight: 600; font-size: 18px; line-height: 1.2; color: var(--ink); }
+    .stage-sub { font-size: 13px; color: var(--ink-light); margin-top: 1px; }
+
+    .expand-icon { font-size: 20px; color: var(--ink-light); transition: transform 0.3s ease; flex-shrink: 0; user-select: none; }
+    .card.open .expand-icon { transform: rotate(45deg); }
+
+    .card-detail { max-height: 0; overflow: hidden; transition: max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1); }
+    .card.open .card-detail { max-height: 3000px; }
+
+    .card-detail-inner { padding: 20px 24px 24px; border-top: 1px solid var(--rule); }
+
+    .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    @media (max-width: 560px) { .detail-grid { grid-template-columns: 1fr; } }
+
+    .detail-block-label { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-light); font-weight: 500; margin-bottom: 6px; }
+    .detail-block-text { font-size: 14px; line-height: 1.6; color: var(--ink); }
+
+    .reversibility-tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 500;
+    }
+    .s1 .reversibility-tag { background: var(--s1-bg); color: var(--s1-hue); border: 1px solid var(--s1-hue); }
+    .s2 .reversibility-tag { background: var(--s2-bg); color: var(--s2-hue); border: 1px solid var(--s2-hue); }
+    .s3 .reversibility-tag { background: var(--s3-bg); color: var(--s3-hue); border: 1px solid var(--s3-hue); }
+
+    .insight-box {
+      background: var(--bg-subtle); border-radius: 6px;
+      padding: 14px 16px; font-size: 13px; line-height: 1.6;
+      color: var(--ink); margin-top: 12px;
+    }
+    .insight-box strong { font-weight: 500; }
+
+    /* Embedded images */
+    .embed-img { width: 100%; border-radius: 8px; display: block; margin-bottom: 16px; }
+
+    .explainer-text { font-size: 14px; line-height: 1.7; color: var(--ink); margin-bottom: 12px; }
+    .explainer-text strong { font-weight: 500; }
+
+    .term-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+    @media (max-width: 560px) { .term-row { grid-template-columns: 1fr; } }
+
+    .term-block { background: var(--bg-subtle); border-radius: 6px; padding: 12px 14px; }
+    .term-block .term-title { font-weight: 500; font-size: 13px; margin-bottom: 4px; }
+    .term-block .term-desc { font-size: 12px; color: var(--ink-light); line-height: 1.55; }
+
+    /* Vertical continuum */
+    .continuum-visual { display: flex; gap: 32px; align-items: stretch; margin: 8px 0 16px; }
+    @media (max-width: 560px) { .continuum-visual { flex-direction: column; gap: 16px; } }
+
+    .continuum-arrow-col {
+      display: flex; flex-direction: column; align-items: center;
+      width: 64px; flex-shrink: 0;
+    }
+    .arrow-head-up { width: 0; height: 0; border-left: 18px solid transparent; border-right: 18px solid transparent; border-bottom: 24px solid #5cb85c; }
+    .arrow-shaft {
+      width: 36px; flex: 1; min-height: 280px;
+      background: linear-gradient(to bottom, #5cb85c 0%, #E07B39 35%, #C0482A 68%, #6B3A3A 100%);
+      position: relative;
+    }
+    .shaft-dot { position: absolute; right: -8px; width: 14px; height: 14px; border-radius: 50%; background: white; border: 2.5px solid #333; }
+    .shaft-dot.d1 { top: 4%; }
+    .shaft-dot.d2 { top: 30%; }
+    .shaft-dot.d3 { top: 60%; }
+    .shaft-dot.d4 { top: 87%; }
+
+    .arrow-head-down { width: 0; height: 0; border-left: 18px solid transparent; border-right: 18px solid transparent; border-top: 24px solid #6B3A3A; }
+
+    .continuum-labels-col {
+      flex: 1; display: flex; flex-direction: column;
+      justify-content: space-between; padding: 4px 0; min-height: 328px;
+    }
+    .c-label-title { font-weight: 500; font-size: 14px; margin-bottom: 3px; }
+    .c-label-desc { font-size: 12px; color: var(--ink-light); line-height: 1.4; }
+
+    /* Staircase SVG */
+    .staircase-wrap { width: 100%; margin-bottom: 16px; overflow-x: auto; }
+    .staircase-svg { width: 100%; min-width: 420px; display: block; }
+
+    /* Pyramid SVG */
+    .pyramid-wrap { width: 100%; margin-bottom: 16px; }
+    .pyramid-svg { width: 100%; display: block; }
+
+    /* Key insight */
+    .key-insight {
+      margin-top: 40px; padding: 20px 24px;
+      border: 1.5px solid var(--rule); border-radius: 10px;
+      display: flex; gap: 16px; align-items: flex-start;
+    }
+    .insight-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+    .insight-title { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+    .insight-text { font-size: 14px; color: var(--ink-light); line-height: 1.65; }
+
+    footer { margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--rule); font-size: 11px; color: #aaaaaa; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <p class="label">Isleworth Pain &amp; Injury Studio</p>
+    <h1>Tendinopathy —<br><em>the 3-stage continuum</em></h1>
+    <p class="subtitle">Tendon pain is not simple inflammation. It follows a spectrum of tissue change. Understanding where you are on that spectrum explains why rest alone rarely solves the problem.</p>
+  </header>
+
+  <!-- ── SECTION 1: THE CONTINUUM ── -->
+  <div class="section-header">
+    <div class="section-label">Section 1</div>
+    <div class="section-title">The 3-Stage Continuum</div>
+  </div>
+
+  <div class="rail-container">
+    <div class="rail">
+      <div class="rail-seg s1"></div>
+      <div class="rail-seg s2"></div>
+      <div class="rail-seg s3"></div>
+    </div>
+    <div class="rail-labels">
+      <span>Reactive</span>
+      <span>Dysrepair</span>
+      <span>Degenerative</span>
+    </div>
+  </div>
+
+  <div class="reversibility-row">
+    <div class="rev-pill high">
+      <span class="rev-label">Stage 1</span>
+      <span class="rev-arrow">⟵⟶</span>
+      <span class="rev-text">High reversibility</span>
+    </div>
+    <div class="rev-pill partial">
+      <span class="rev-label">Stage 2</span>
+      <span class="rev-arrow">⟵ ⟶</span>
+      <span class="rev-text">Partial reversibility</span>
+    </div>
+    <div class="rev-pill low">
+      <span class="rev-label">Stage 3</span>
+      <span class="rev-arrow">⟶</span>
+      <span class="rev-text">Low reversibility</span>
+    </div>
+  </div>
+
+  <!-- Stage 1 -->
+  <div class="card s1" onclick="toggleCard(this)">
+    <div class="card-header">
+      <div class="card-header-left">
+        <div class="stage-badge">1</div>
+        <div class="card-title-block">
+          <div class="stage-number">Stage 1</div>
+          <div class="stage-name">Reactive Tendinopathy</div>
+          <div class="stage-sub">Short-term overload response · 0–2 weeks</div>
+        </div>
+      </div>
+      <div class="expand-icon">+</div>
+    </div>
+    <div class="card-detail">
+      <div class="card-detail-inner">
+        <div class="detail-grid">
+          <div class="detail-block">
+            <div class="detail-block-label">What is happening</div>
+            <div class="detail-block-text">Tendon cells swell in response to sudden overload. Proteins accumulate water, making the tendon thick and stiff. No permanent structural damage has occurred yet.</div>
+          </div>
+          <div class="detail-block">
+            <div class="detail-block-label">Who this typically affects</div>
+            <div class="detail-block-text">Younger athletes after a sudden spike in training load. Deconditioned individuals exposed to moderate activity after a period of rest.</div>
+          </div>
+        </div>
+        <span class="reversibility-tag">✓ High reversibility — best window to intervene</span>
+        <div class="insight-box">
+          <strong>The opportunity:</strong> At this stage, the tendon has not yet sustained structural damage. Load management and progressive rehabilitation can reverse the process completely.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stage 2 -->
+  <div class="card s2" onclick="toggleCard(this)">
+    <div class="card-header">
+      <div class="card-header-left">
+        <div class="stage-badge">2</div>
+        <div class="card-title-block">
+          <div class="stage-number">Stage 2</div>
+          <div class="stage-name">Tendon Dysrepair</div>
+          <div class="stage-sub">Failed healing · 2–6 weeks</div>
+        </div>
+      </div>
+      <div class="expand-icon">+</div>
+    </div>
+    <div class="card-detail">
+      <div class="card-detail-inner">
+        <div class="detail-grid">
+          <div class="detail-block">
+            <div class="detail-block-label">What is happening</div>
+            <div class="detail-block-text">The collagen matrix begins to break down. Fibres become disorganised. New, unwanted blood vessels and nerve endings grow into the tendon, increasing pain sensitivity.</div>
+          </div>
+          <div class="detail-block">
+            <div class="detail-block-label">Who this typically affects</div>
+            <div class="detail-block-text">Chronically overloaded younger athletes. Older individuals whose tendons are stiffer and slower to adapt to load changes.</div>
+          </div>
+        </div>
+        <span class="reversibility-tag">↩ Partial reversibility — structural change present</span>
+        <div class="insight-box">
+          <strong>Important:</strong> Pain may be significant despite relatively limited visible damage. The presence of new nerve fibres amplifies pain signals — pain level does not reliably reflect the degree of structural change.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stage 3 -->
+  <div class="card s3" onclick="toggleCard(this)">
+    <div class="card-header">
+      <div class="card-header-left">
+        <div class="stage-badge">3</div>
+        <div class="card-title-block">
+          <div class="stage-number">Stage 3</div>
+          <div class="stage-name">Degenerative Tendinopathy</div>
+          <div class="stage-sub">Structural breakdown · 6+ weeks</div>
+        </div>
+      </div>
+      <div class="expand-icon">+</div>
+    </div>
+    <div class="card-detail">
+      <div class="card-detail-inner">
+        <div class="detail-grid">
+          <div class="detail-block">
+            <div class="detail-block-label">What is happening</div>
+            <div class="detail-block-text">Cell death and collagen collapse create acellular regions — effectively holes — within the tendon. Paradoxically, these areas are often <em>less</em> painful because fewer nerve endings remain.</div>
+          </div>
+          <div class="detail-block">
+            <div class="detail-block-label">Who this typically affects</div>
+            <div class="detail-block-text">Older individuals. Elite athletes with a long history of repetitive overload. Often discovered incidentally on imaging.</div>
+          </div>
+        </div>
+        <span class="reversibility-tag">→ Low reversibility — focus shifts to capacity building</span>
+        <div class="insight-box">
+          <strong>The goal changes here:</strong> Degenerated areas cannot regenerate. The aim is to build load capacity in the remaining healthy tendon tissue — not to reverse the structural change.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SECTION 2: ANATOMY ── -->
+  <div class="section-header">
+    <div class="section-label">Section 2</div>
+    <div class="section-title">What's happening inside the tendon</div>
+  </div>
+
+  <!-- Diagram A -->
+  <div class="card neutral" onclick="toggleCard(this)">
+    <div class="card-header">
+      <div class="card-header-left">
+        <div class="card-icon">🔬</div>
+        <div class="card-title-block">
+          <div class="stage-number">Diagram A</div>
+          <div class="stage-name">Tendonitis vs Tendinosis</div>
+          <div class="stage-sub">Why the label matters for your treatment</div>
+        </div>
+      </div>
+      <div class="expand-icon">+</div>
+    </div>
+    <div class="card-detail">
+      <div class="card-detail-inner">
+        <img class="embed-img"
+          src="https://chill-weight-435.notion.site/image/attachment%3A91e479aa-ea4d-45ec-8650-ca00cdbe81a6%3Aimage.png?table=block&id=3423cdbf-527f-8066-918c-f7ff5e16345c&spaceId=4ff88bcc-3de5-4477-997b-32ff5652f5d4&width=1410&userId=&cache=v2"
+          alt="Tendonitis vs Tendinosis comparison"
+          loading="lazy"
+        />
+        <p class="explainer-text">
+          <strong>Tendonitis</strong> (left) is an acute inflammatory reaction — the tendon is reactive and swollen, but structurally the fibres are largely intact. It responds to rest and anti-inflammatories short-term. <strong>Tendinosis</strong> (right) is a chronic, non-inflammatory state where the internal structure has broken down. The fibres are disorganised and weakened, even if the tendon looks normal from the outside. Rest and anti-inflammatories do not fix this — progressive loading does.
+        </p>
+        <div class="term-row">
+          <div class="term-block">
+            <div class="term-title">Tendonitis (acute)</div>
+            <div class="term-desc">Inflammation present. Tendon responding to sudden injury. Structure largely intact. Short-term rest may help — but the tendon still needs graduated loading to recover fully.</div>
+          </div>
+          <div class="term-block">
+            <div class="term-title">Tendinosis (chronic)</div>
+            <div class="term-desc">No active inflammation. Internal structure degraded. Rest and anti-inflammatories are not the solution. Progressive loading is the primary treatment to restore collagen integrity.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Diagram B -->
+  <div class="card neutral" onclick="toggleCard(this)">
+    <div class="card-header">
+      <div class="card-header-left">
+        <div class="card-icon">🧬</div>
+        <div class="card-title-block">
+          <div class="stage-number">Diagram B</div>
+          <div class="stage-name">Healthy Tendon vs Tendinopathy</div>
+          <div class="stage-sub">How the internal structure changes with chronic overload</div>
+        </div>
+      </div>
+      <div class="expand-icon">+</div>
+    </div>
+    <div class="card-detail">
+      <div class="card-detail-inner">
+        <img class="embed-img"
+          src="https://chill-weight-435.notion.site/image/attachment%3Afa20becb-8858-451a-9094-be5519c686f2%3Aimage.png?table=block&id=3423cdbf-527f-809b-b753-fd27da802cae&spaceId=4ff88bcc-3de5-4477-997b-32ff5652f5d4&width=1410&userId=&cache=v2"
+          alt="Healthy tendon vs tendinopathy cross-section"
+          loading="lazy"
+        />
+        <p class="explainer-text">
+          In a <strong>healthy tendon</strong>, collagen fibres are tightly packed and highly aligned — giving the tendon its tensile strength. Cells are flat and evenly distributed. In a <strong>tendinopathic tendon</strong>, fibres become disorganised and weaker collagen types replace the strong structural collagen. New blood vessels and nerve endings invade the tissue. This nerve ingrowth is a key reason why pain can be disproportionately high relative to the structural damage visible on scans.
+        </p>
+        <div class="term-row">
+          <div class="term-block">
+            <div class="term-title">Healthy tendon</div>
+            <div class="term-desc">Densely packed, aligned Type I collagen. Flat fibroblasts evenly distributed. No blood vessel ingrowth. High tensile strength and load capacity.</div>
+          </div>
+          <div class="term-block">
+            <div class="term-title">Tendinopathy</div>
+            <div class="term-desc">Disorganised Type I &amp; III collagen. Rounded fibroblasts unevenly spaced. Increased ground substance (water retention). Capillary and nerve ingrowth — driving amplified and persistent pain.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SECTION 3: REHAB PATHWAY ── -->
+  <div class="section-header">
+    <div class="section-label">Section 3</div>
+    <div class="section-title">The rehabilitation pathway</div>
+  </div>
+
+  <!-- Diagram C — Vertical continuum -->
+  <div class="card neutral" onclick="toggleCard(this)">
+    <div class="card-header">
+      <div class="card-header-left">
+        <div class="card-icon">📍</div>
+        <div class="card-title-block">
+          <div class="stage-number">Diagram C</div>
+          <div class="stage-name">Where are you on the continuum?</div>
+          <div class="stage-sub">From normal tendon to degenerative — and back</div>
+        </div>
+      </div>
+      <div class="expand-icon">+</div>
+    </div>
+    <div class="card-detail">
+      <div class="card-detail-inner">
+        <div class="continuum-visual">
+          <div class="continuum-arrow-col">
+            <div class="arrow-head-up"></div>
+            <div class="arrow-shaft">
+              <div class="shaft-dot d1"></div>
+              <div class="shaft-dot d2"></div>
+              <div class="shaft-dot d3"></div>
+              <div class="shaft-dot d4"></div>
+            </div>
+            <div class="arrow-head-down"></div>
+          </div>
+          <div class="continuum-labels-col">
+            <div class="c-label">
+              <div class="c-label-title" style="color:#4a9e4a;">Normal Tendon</div>
+              <div class="c-label-desc">Healthy, organised collagen. Full load capacity. No symptoms.</div>
+            </div>
+            <div class="c-label">
+              <div class="c-label-title" style="color:var(--s1-hue);">Reactive Stage · 0–2 weeks</div>
+              <div class="c-label-desc">Acute overload response. Swelling and stiffness. No structural damage yet. Highly reversible.</div>
+            </div>
+            <div class="c-label">
+              <div class="c-label-title" style="color:var(--s2-hue);">Dysrepair Stage · 2–6 weeks</div>
+              <div class="c-label-desc">Collagen disorganisation begins. New vessels and nerves invade. Partially reversible with correct loading.</div>
+            </div>
+            <div class="c-label">
+              <div class="c-label-title" style="color:var(--s3-hue);">Degenerative Stage · 6+ weeks</div>
+              <div class="c-label-desc">Cell death. Collagen collapse. Pain may paradoxically reduce. Structural change is largely permanent — but capacity can still be built in remaining tissue.</div>
+            </div>
+          </div>
+        </div>
+        <div class="insight-box">
+          The arrow moves <strong>downward</strong> with continued overload and <strong>upward</strong> with correct rehabilitation. Stages 1 and 2 can reverse — which is why early intervention matters significantly.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Diagram D — Load pyramid -->
+  <div class="card neutral" onclick="toggleCard(this)">
+    <div class="card-header">
+      <div class="card-header-left">
+        <div class="card-icon">📐</div>
+        <div class="card-title-block">
+          <div class="stage-number">Diagram D</div>
+          <div class="stage-name">Load Progression Pyramid</div>
+          <div class="stage-sub">Building from isometrics to full sport demands</div>
+        </div>
+      </div>
+      <div class="expand-icon">+</div>
+    </div>
+    <div class="card-detail">
+      <div class="card-detail-inner">
+        <div class="pyramid-wrap">
+          <svg class="pyramid-svg" viewBox="0 0 600 320" xmlns="http://www.w3.org/2000/svg" font-family="DM Sans, sans-serif">
+
+            <!-- Goal capacity triangle (right, faint) -->
+            <polygon points="430,28 580,290 440,290" fill="#f2f2f2" stroke="#dddddd" stroke-width="1.5"/>
+            <text x="510" y="175" text-anchor="middle" font-size="11" fill="#aaa" font-weight="500">Required</text>
+            <text x="510" y="189" text-anchor="middle" font-size="11" fill="#aaa" font-weight="500">Capacity</text>
+
+            <!-- Main pyramid -->
+            <polygon points="300,18 580,290 20,290" fill="none" stroke="#1a1a1a" stroke-width="2"/>
+
+            <!-- Level fills -->
+            <polygon points="20,290 580,290 520,242 80,242" fill="#FDF3EC"/>
+            <polygon points="80,242 520,242 455,190 145,190" fill="#FAF0EE"/>
+            <polygon points="145,190 455,190 375,128 225,128" fill="#F5EDED"/>
+            <polygon points="225,128 375,128 300,18" fill="#ede0e0"/>
+
+            <!-- Dividers -->
+            <line x1="80" y1="242" x2="520" y2="242" stroke="#ddd" stroke-width="1"/>
+            <line x1="145" y1="190" x2="455" y2="190" stroke="#ddd" stroke-width="1"/>
+            <line x1="225" y1="128" x2="375" y2="128" stroke="#ddd" stroke-width="1"/>
+
+            <!-- Level labels -->
+            <text x="300" y="272" text-anchor="middle" font-size="12.5" fill="#1a1a1a" font-weight="500">Isometrics</text>
+            <text x="300" y="287" text-anchor="middle" font-size="10" fill="#888">Start here · pain relief focus</text>
+
+            <text x="300" y="222" text-anchor="middle" font-size="12.5" fill="#1a1a1a" font-weight="500">Heavy Slow Resistance</text>
+            <text x="300" y="237" text-anchor="middle" font-size="10" fill="#888">Rebuilds collagen · 3–4× per week</text>
+
+            <text x="300" y="166" text-anchor="middle" font-size="12.5" fill="#1a1a1a" font-weight="500">Energy Storage &amp; Release</text>
+            <text x="300" y="181" text-anchor="middle" font-size="10" fill="#888">Jogging · low plyometrics</text>
+
+            <text x="300" y="82" text-anchor="middle" font-size="12.5" fill="#1a1a1a" font-weight="500">Full Plyometrics</text>
+            <text x="300" y="97" text-anchor="middle" font-size="10" fill="#888">Sport-specific · return to play</text>
+
+            <!-- Current capacity label -->
+            <text x="22" y="305" font-size="10" fill="#E07B39" font-weight="500">▲ Start: current capacity</text>
+
+          </svg>
+        </div>
+        <div class="term-row">
+          <div class="term-block">
+            <div class="term-title">Isometrics (start here)</div>
+            <div class="term-desc">Static holds against resistance. Immediate analgesic (pain-relieving) effect. Safe even in the painful stage. 45–60 sec holds, 3–5 sets, daily.</div>
+          </div>
+          <div class="term-block">
+            <div class="term-title">Heavy slow resistance</div>
+            <div class="term-desc">Eccentric and isotonic loading. This is where lasting structural collagen change happens. 3–4× per week with recovery days in between.</div>
+          </div>
+          <div class="term-block">
+            <div class="term-title">Energy storage</div>
+            <div class="term-desc">Walking, jogging, low-level plyometrics. The tendon must store and release energy efficiently before sport demands are added.</div>
+          </div>
+          <div class="term-block">
+            <div class="term-title">Full return to load</div>
+            <div class="term-desc">Sport-specific plyometrics and high-intensity activity. Only when all lower levels are pain-free and strength targets are met.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Diagram E — Graded staircase -->
+  <div class="card neutral" onclick="toggleCard(this)">
+    <div class="card-header">
+      <div class="card-header-left">
+        <div class="card-icon">🪜</div>
+        <div class="card-title-block">
+          <div class="stage-number">Diagram E</div>
+          <div class="stage-name">Graded Return to Activity</div>
+          <div class="stage-sub">Step by step — you cannot skip rungs</div>
+        </div>
+      </div>
+      <div class="expand-icon">+</div>
+    </div>
+    <div class="card-detail">
+      <div class="card-detail-inner">
+        <div class="staircase-wrap">
+          <svg class="staircase-svg" viewBox="0 0 580 290" xmlns="http://www.w3.org/2000/svg" font-family="DM Sans, sans-serif">
+
+            <!-- Time arrow -->
+            <line x1="30" y1="265" x2="480" y2="265" stroke="#1a1a1a" stroke-width="1.5"/>
+            <polygon points="480,261 492,265 480,269" fill="#1a1a1a"/>
+            <text x="255" y="282" text-anchor="middle" font-size="11" fill="#999">Time →</text>
+
+            <!-- Steps -->
+            <rect x="30"  y="220" width="76" height="40" fill="#FDF3EC" stroke="#E07B39" stroke-width="1.5" rx="3"/>
+            <text x="68"  y="237" text-anchor="middle" font-size="10" fill="#1a1a1a" font-weight="500">Isometric</text>
+            <text x="68"  y="250" text-anchor="middle" font-size="9"  fill="#888">work</text>
+
+            <rect x="106" y="180" width="76" height="40" fill="#FAF0EE" stroke="#C0482A" stroke-width="1.5" rx="3"/>
+            <text x="144" y="197" text-anchor="middle" font-size="10" fill="#1a1a1a" font-weight="500">Strength</text>
+            <text x="144" y="210" text-anchor="middle" font-size="9"  fill="#888">loading</text>
+
+            <rect x="182" y="140" width="76" height="40" fill="#F5EDED" stroke="#C0482A" stroke-width="1.5" rx="3"/>
+            <text x="220" y="157" text-anchor="middle" font-size="10" fill="#1a1a1a" font-weight="500">Functional</text>
+            <text x="220" y="170" text-anchor="middle" font-size="9"  fill="#888">strength</text>
+
+            <rect x="258" y="100" width="76" height="40" fill="#ede0e0" stroke="#6B3A3A" stroke-width="1.5" rx="3"/>
+            <text x="296" y="117" text-anchor="middle" font-size="10" fill="#1a1a1a" font-weight="500">Speed</text>
+            <text x="296" y="130" text-anchor="middle" font-size="9"  fill="#888">&amp; agility</text>
+
+            <rect x="334" y="60" width="76" height="40" fill="#e8d5d5" stroke="#6B3A3A" stroke-width="1.5" rx="3"/>
+            <text x="372" y="77" text-anchor="middle" font-size="10" fill="#1a1a1a" font-weight="500">Plyometrics</text>
+            <text x="372" y="90" text-anchor="middle" font-size="9"  fill="#888">energy storage</text>
+
+            <!-- Vertical connectors -->
+            <line x1="106" y1="220" x2="106" y2="220" stroke="#ccc" stroke-width="1" stroke-dasharray="3,3"/>
+            <line x1="106" y1="220" x2="106" y2="220" stroke="#ccc" stroke-width="1"/>
+            <line x1="106" y1="220" x2="106" y2="220" stroke="#bbb" stroke-width="1" stroke-dasharray="4,3"/>
+
+            <line x1="106" y1="220" x2="106" y2="220" stroke="#bbb" stroke-width="1" stroke-dasharray="4,3"/>
+
+            <!-- Step risers -->
+            <line x1="106" y1="220" x2="106" y2="220" stroke="#ccc" stroke-width="1"/>
+            <polyline points="106,220 106,180" fill="none" stroke="#ccc" stroke-width="1" stroke-dasharray="4,3"/>
+            <polyline points="182,180 182,140" fill="none" stroke="#ccc" stroke-width="1" stroke-dasharray="4,3"/>
+            <polyline points="258,140 258,100" fill="none" stroke="#ccc" stroke-width="1" stroke-dasharray="4,3"/>
+            <polyline points="334,100 334,60"  fill="none" stroke="#ccc" stroke-width="1" stroke-dasharray="4,3"/>
+
+            <!-- Return to play arrow -->
+            <line x1="410" y1="60" x2="410" y2="18" stroke="#1a1a1a" stroke-width="2"/>
+            <polygon points="406,18 410,8 414,18" fill="#1a1a1a"/>
+            <text x="420" y="38" font-size="11" fill="#1a1a1a" font-weight="500">Return to play</text>
+
+            <!-- Start label -->
+            <text x="30" y="214" font-size="10" fill="#E07B39" font-weight="500">Tendon injury</text>
+
+            <!-- Tendon load box -->
+            <rect x="460" y="95" width="112" height="78" fill="#f8f8f8" stroke="#e0e0e0" stroke-width="1" rx="4"/>
+            <text x="470" y="112" font-size="10" fill="#1a1a1a" font-weight="500">Tendon load:</text>
+            <text x="470" y="128" font-size="10" fill="#666">• Intensity</text>
+            <text x="470" y="143" font-size="10" fill="#666">• Volume</text>
+            <text x="470" y="158" font-size="10" fill="#666">• Frequency</text>
+            <text x="470" y="170" font-size="9"  fill="#aaa">all must progress</text>
+
+          </svg>
+        </div>
+        <div class="insight-box">
+          <strong>The key rule:</strong> Each step must be pain-free — or below 3/10 pain that fully settles within 24 hours — before progressing to the next. Skipping steps is the most common reason tendinopathy returns. The rate of climb through the staircase varies by person; the sequence does not.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Key insight -->
+  <div class="key-insight">
+    <div class="insight-icon">⟵⟶</div>
+    <div class="insight-body">
+      <div class="insight-title">The continuum moves in both directions</div>
+      <div class="insight-text">Stages 1 and 2 can move backward toward normal with the right intervention — primarily progressive loading, not rest. The danger is treating a Stage 2 or 3 tendon as if it were a simple acute injury. Pain settling does not mean the tendon has recovered its capacity.</div>
+    </div>
+  </div>
+
+  <footer>
+    Based on Cook &amp; Purdam Continuum Model, <em>British Journal of Sports Medicine</em> (2009, revised 2016). Anatomy diagrams included for educational reference. This page is for patient education — not a substitute for clinical assessment.
+  </footer>
+
+  <script>
+    function toggleCard(card) {
+      card.classList.toggle('open');
+    }
+  </script>
+
+</body>
+</html>
